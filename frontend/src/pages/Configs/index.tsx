@@ -31,7 +31,7 @@ const ConfigManagement: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [systemConfig, setSystemConfig] = useState<any>(null); // 存储系统核心配置
+  const [envConfigs, setEnvConfigs] = useState<any>(null); // 存储环境变量配置
 
   // 加载配置
   const loadConfigs = async () => {
@@ -40,16 +40,11 @@ const ConfigManagement: React.FC = () => {
       const response = await configsApi.getSystemConfigs();
 
       if (response.success && response.data) {
-        const { configs } = response.data;
+        const { configs, env_configs } = response.data;
         
-        // 提取系统核心配置
-        if (configs.system_config) {
-          try {
-            const sysConfig = JSON.parse(configs.system_config);
-            setSystemConfig(sysConfig);
-          } catch (e) {
-            console.error('解析系统配置失败:', e);
-          }
+        // 设置环境变量配置
+        if (env_configs) {
+          setEnvConfigs(env_configs);
         }
         
         // 解析 JSON 字段
@@ -166,23 +161,61 @@ const ConfigManagement: React.FC = () => {
         </Space>
       </div>
 
-      {/* 系统核心配置（只读） */}
-      {systemConfig && (
+      {/* 环境变量配置（只读） */}
+      {envConfigs && (
         <Alert
           message={
             <Space>
               <LockOutlined />
-              <Text strong>系统核心配置（只读）</Text>
+              <Text strong>环境变量配置（只读）</Text>
             </Space>
           }
           description={
             <div>
-              <Text type="secondary">API 前缀：</Text>
-              <Text strong style={{ marginLeft: 8, fontSize: 16 }}>
-                {systemConfig.API_PREFIX || '（无）'}
-              </Text>
-              <div style={{ marginTop: 8, fontSize: 12, color: '#666' }}>
-                其他敏感配置（API 密钥、管理员密码等）不在此显示，如需修改请联系系统管理员。
+              <Row gutter={[16, 8]} style={{ marginBottom: 8 }}>
+                <Col span={12}>
+                  <Text type="secondary">API 前缀：</Text>
+                  <Text strong style={{ marginLeft: 8 }}>
+                    {envConfigs.API_PREFIX || '（无）'}
+                  </Text>
+                </Col>
+                <Col span={12}>
+                  <Text type="secondary">API 密钥：</Text>
+                  <Text strong style={{ marginLeft: 8 }}>
+                    {envConfigs.API_SECRET}
+                  </Text>
+                </Col>
+              </Row>
+              <Row gutter={[16, 8]} style={{ marginBottom: 8 }}>
+                <Col span={12}>
+                  <Text type="secondary">管理后台前缀：</Text>
+                  <Text strong style={{ marginLeft: 8 }}>
+                    {envConfigs.ADMIN_PREFIX}
+                  </Text>
+                </Col>
+                <Col span={12}>
+                  <Text type="secondary">管理员账号：</Text>
+                  <Text strong style={{ marginLeft: 8 }}>
+                    {envConfigs.ADMIN_USERNAME}
+                  </Text>
+                </Col>
+              </Row>
+              <Row gutter={[16, 8]}>
+                <Col span={12}>
+                  <Text type="secondary">管理员密码：</Text>
+                  <Text strong style={{ marginLeft: 8 }}>
+                    {envConfigs.ADMIN_PASSWORD}
+                  </Text>
+                </Col>
+                <Col span={12}>
+                  <Text type="secondary">JWT 密钥：</Text>
+                  <Text strong style={{ marginLeft: 8 }}>
+                    {envConfigs.JWT_SECRET_KEY}
+                  </Text>
+                </Col>
+              </Row>
+              <div style={{ marginTop: 12, fontSize: 12, color: '#666' }}>
+                这些配置从环境变量中读取，如需修改请修改 .env 文件或容器的环境变量。
               </div>
             </div>
           }

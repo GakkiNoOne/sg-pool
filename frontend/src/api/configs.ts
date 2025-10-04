@@ -10,6 +10,7 @@ import request, { BaseResponse } from '@/utils/request';
 export interface SystemConfigsResponse {
   configs: Record<string, string>;
   readonly_keys: string[];
+  env_configs: Record<string, string>;
 }
 
 /**

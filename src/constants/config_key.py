@@ -2,10 +2,6 @@
 
 # ==================== 配置键常量 ====================
 
-# 系统核心配置（只读）
-CONFIG_KEY_SYSTEM_CONFIG = "system_config"
-"""系统核心配置（包含 API 前缀、密钥、管理员账号等）"""
-
 # Key 池相关
 CONFIG_KEY_POOL_SIZE = "key_pool_size"
 """Key 池大小"""
@@ -65,13 +61,10 @@ DEFAULT_ANTHROPIC_MODELS = sorted(list(ANTHROPIC_MODELS))
 # ==================== 配置组定义 ====================
 
 # 系统只读配置键（不允许通过 API 修改）
-READONLY_CONFIG_KEYS = [
-    CONFIG_KEY_SYSTEM_CONFIG,
-]
+READONLY_CONFIG_KEYS = []
 
 # 所有配置键列表（用于初始化和验证）
 ALL_CONFIG_KEYS = [
-    CONFIG_KEY_SYSTEM_CONFIG,
     CONFIG_KEY_POOL_SIZE,
     CONFIG_KEY_UA_LIST,
     CONFIG_KEY_PROXY_LIST,
@@ -83,7 +76,6 @@ ALL_CONFIG_KEYS = [
 
 # 配置键描述映射
 CONFIG_KEY_DESCRIPTIONS = {
-    CONFIG_KEY_SYSTEM_CONFIG: "系统核心配置（只读）：包含 API 前缀、密钥、管理员账号、JWT 密钥等",
     CONFIG_KEY_POOL_SIZE: "Key 池大小，控制同时活跃的 API Key 数量",
     CONFIG_KEY_UA_LIST: "User Agent 列表，用于请求时随机选择",
     CONFIG_KEY_PROXY_LIST: "代理服务器列表，格式：http://host:port",

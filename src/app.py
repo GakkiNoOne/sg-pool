@@ -23,22 +23,13 @@ async def lifespan(app: FastAPI):
     init_database()
     print(f"✅ 数据库已连接: {settings.DATABASE_PATH}")
     
-    # 加载系统配置和全局配置
+    # 加载全局配置
     from configs.global_config import global_config
     from entity.databases.database import SessionLocal
-    from service.databases.config_service import get_system_config
     
     db = SessionLocal()
     try:
-        # 1. 加载系统配置（API_PREFIX, API_SECRET, ADMIN_USERNAME 等）
-        system_config = get_system_config(db)
-        if system_config:
-            settings.load_from_database(system_config)
-            print("✅ 系统配置已从数据库加载")
-        else:
-            print("⚠️  数据库中未找到系统配置，使用环境变量")
-        
-        # 2. 加载全局配置
+        # 加载全局配置
         global_config.load_from_db(db)
         print("✅ 全局配置已加载")
     finally:

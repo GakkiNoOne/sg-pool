@@ -7,7 +7,6 @@ import json
 from entity.databases.config import Config
 from entity.req.config import ConfigCreateRequest, ConfigUpdateRequest
 from constants.config_key import (
-    CONFIG_KEY_SYSTEM_CONFIG,
     CONFIG_KEY_POOL_SIZE,
     CONFIG_KEY_UA_LIST,
     CONFIG_KEY_PROXY_LIST,
@@ -150,10 +149,6 @@ def get_all_system_configs(db: Session) -> Dict[str, str]:
     # 确保所有系统配置键都存在，不存在则使用默认值
     result = {}
     
-    # 系统核心配置（只读）
-    if CONFIG_KEY_SYSTEM_CONFIG in config_dict:
-        result[CONFIG_KEY_SYSTEM_CONFIG] = config_dict[CONFIG_KEY_SYSTEM_CONFIG]
-    
     # Key 池大小
     result[CONFIG_KEY_POOL_SIZE] = config_dict.get(
         CONFIG_KEY_POOL_SIZE, 
@@ -222,48 +217,5 @@ def save_system_configs(db: Session, configs: Dict[str, str]) -> None:
                 memo=CONFIG_KEY_DESCRIPTIONS.get(key, "")
             )
             db.add(config)
-    
-    db.commit()
-
-
-def get_system_config(db: Session) -> Optional[Dict]:
-    """
-    获取系统配置
-    
-    Returns:
-        系统配置字典，包含 API_PREFIX, API_SECRET 等
-    """
-    config = get_config_by_key(db, CONFIG_KEY_SYSTEM_CONFIG)
-    if config and config.value:
-        try:
-            return json.loads(config.value)
-        except:
-            return None
-    return None
-
-
-def save_system_config(db: Session, system_config: Dict[str, str]) -> None:
-    """
-    保存系统配置到数据库
-    
-    参数:
-        system_config: 包含 API_PREFIX, API_SECRET, ADMIN_USERNAME, ADMIN_PASSWORD, JWT_SECRET_KEY
-    """
-    config = get_config_by_key(db, CONFIG_KEY_SYSTEM_CONFIG)
-    
-    config_json = json.dumps(system_config, ensure_ascii=False, indent=2)
-    
-    if config:
-        # 更新
-        config.value = config_json
-        config.update_time = datetime.now()
-    else:
-        # 创建
-        config = Config(
-            key=CONFIG_KEY_SYSTEM_CONFIG,
-            value=config_json,
-            memo=CONFIG_KEY_DESCRIPTIONS.get(CONFIG_KEY_SYSTEM_CONFIG, "")
-        )
-        db.add(config)
     
     db.commit()

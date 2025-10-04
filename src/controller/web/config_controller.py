@@ -29,15 +29,28 @@ class SystemConfigSaveRequest(BaseModel):
 async def get_system_configs(
     db: Session = Depends(get_db)
 ):
-    """获取所有系统配置（返回 {key: value} 格式，以及只读标记）"""
+    """获取所有系统配置（返回 {key: value} 格式，以及只读标记和环境变量配置）"""
     try:
+        from configs.config import settings
+        
         configs = config_service.get_all_system_configs(db)
         logger.info(f"获取系统配置成功")
         
-        # 返回配置和只读标记
+        # 获取环境变量配置（只读）
+        env_configs = {
+            "API_PREFIX": settings.API_PREFIX,
+            "API_SECRET": settings.API_SECRET if settings.API_SECRET else "（未配置）",
+            "ADMIN_PREFIX": settings.ADMIN_PREFIX,
+            "ADMIN_USERNAME": settings.ADMIN_USERNAME,
+            "ADMIN_PASSWORD": "******",  # 密码不显示
+            "JWT_SECRET_KEY": "******",  # JWT密钥不显示
+        }
+        
+        # 返回配置、只读标记和环境变量配置
         result = {
             "configs": configs,
-            "readonly_keys": READONLY_CONFIG_KEYS
+            "readonly_keys": READONLY_CONFIG_KEYS,
+            "env_configs": env_configs
         }
         
         return Response[Dict].ok(
