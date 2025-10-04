@@ -1,0 +1,55 @@
+# Git
+.git
+.gitignore
+.github
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Database (will be mounted as volume)
+data/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Frontend - 只排除构建产物和依赖，源码需要保留用于构建
+frontend/node_modules
+frontend/dist
+frontend/.umi
+frontend/.umi-production
+frontend/.cache
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Misc
+*.bak
+*.tmp
+.env.local
+

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # 后端服务
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: coco-backend
+    ports:
+      - "6777:6777"
+    volumes:
+      - ${DATA_DIR:-./data}:/app/data
+      - ${LOGS_DIR:-./logs}:/app/logs
+    environment:
+      # 从 .env 文件读取环境变量
+      - API_PREFIX=${API_PREFIX:-/{your_api_prefix}}
+      - API_SECRET=${API_SECRET:-your_secret_key}
+      - ADMIN_PREFIX=${ADMIN_PREFIX:-/admin}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-your_jwt_secret_key}
+      - HOST=${HOST:-0.0.0.0}
+      - PORT=${PORT:-6777}
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - coco-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6777/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  coco-network:
+    driver: bridge
+
