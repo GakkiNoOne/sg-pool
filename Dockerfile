@@ -63,5 +63,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:6777/health || exit 1
 
 # 启动命令 - 使用 uvicorn 直接启动 FastAPI 应用
-CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "6777"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "6777"]
 
