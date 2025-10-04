@@ -55,13 +55,14 @@ const KeyManagement: React.FC = () => {
   const [proxyList, setProxyList] = useState<string[]>([]);
   const [loadingUA, setLoadingUA] = useState(false);
   const [loadingProxy, setLoadingProxy] = useState(false);
-  // 搜索条件
+  // 搜索条件 - 默认只显示启用的 key
   const [searchParams, setSearchParams] = useState<{
     name?: string;
     enabled?: boolean;
     create_date?: string;
-    min_balance?: number;
-  }>({});
+  }>({
+    enabled: true
+  });
 
   // 加载数据
   const loadData = async () => {
@@ -129,9 +130,6 @@ const KeyManagement: React.FC = () => {
     if (values.create_date) {
       params.create_date = values.create_date.format('YYYY-MM-DD');
     }
-    if (values.min_balance !== undefined && values.min_balance !== null) {
-      params.min_balance = values.min_balance;
-    }
     
     setSearchParams(params);
     setPage(1); // 重置到第一页
@@ -140,13 +138,17 @@ const KeyManagement: React.FC = () => {
   // 重置搜索
   const handleReset = () => {
     searchForm.resetFields();
-    setSearchParams({});
+    // 重置后也默认显示启用的 key
+    searchForm.setFieldsValue({ enabled: true });
+    setSearchParams({ enabled: true });
     setPage(1);
   };
 
   useEffect(() => {
     loadUAList();
     loadProxyList();
+    // 设置搜索表单的初始值
+    searchForm.setFieldsValue({ enabled: true });
   }, []);
 
   const handleAdd = () => {
@@ -602,16 +604,6 @@ const KeyManagement: React.FC = () => {
                   style={{ width: '100%' }}
                   format="YYYY-MM-DD"
                   allowClear
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Form.Item name="min_balance" label="最小余额" style={{ marginBottom: 8 }}>
-                <InputNumber 
-                  placeholder="输入最小余额" 
-                  style={{ width: '100%' }}
-                  min={0}
-                  step={0.1}
                 />
               </Form.Item>
             </Col>
