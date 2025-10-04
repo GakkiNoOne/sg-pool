@@ -89,17 +89,6 @@ networks:
 - 支持平台：`linux/amd64`、`linux/arm64`
 - 服务会自动从 `.env` 文件读取配置
 
-**如需本地构建**，请修改 `docker-compose.yml`：
-```yaml
-services:
-  sg-pool:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    # 注释掉 image 行
-    # image: ghcr.io/gakkinoone/sg-pool:latest
-```
-
 ### 4. 启动服务
 
 ```bash
