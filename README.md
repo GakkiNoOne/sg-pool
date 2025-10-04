@@ -39,57 +39,31 @@ LOGS_DIR=./logs
 ```
 
 
-### 3. Docker Compose 配置
+### 3. 启动服务
 
-**docker-compose.yml**:
-
-```yaml
-version: '3.8'
-
-services:
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: sg-pool
-    ports:
-      - "6777:6777"
-    volumes:
-      - ${DATA_DIR:-./data}:/app/data
-      - ${LOGS_DIR:-./logs}:/app/logs
-    environment:
-      - API_PREFIX=${API_PREFIX:-/{your_api_prefix}}
-      - API_SECRET=${API_SECRET:-your_secret_key}
-      - ADMIN_PREFIX=${ADMIN_PREFIX:-/admin}
-      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-your_jwt_secret_key}
-      - HOST=${HOST:-0.0.0.0}
-      - PORT=${PORT:-6777}
-    env_file:
-      - .env
-    restart: unless-stopped
-    networks:
-      - sg-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6777/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
-networks:
-  sg-network:
-    driver: bridge
-```
-
-### 4. 启动服务
+使用 Docker Compose 部署（自动从 GitHub Container Registry 拉取镜像）：
 
 ```bash
 docker-compose up -d
 ```
 
-### 5. 访问服务
+**docker-compose.yml** 配置说明：
+- 镜像源：`ghcr.io/gakkinoone/sg-pool:latest`（GitHub Actions 自动构建）
+- 支持平台：`linux/amd64`、`linux/arm64`
+- 服务会自动从环境变量读取配置
+
+如需本地构建，请修改 `docker-compose.yml`：
+```yaml
+services:
+  sg-pool:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # 注释掉 image 行
+    # image: ghcr.io/gakkinoone/sg-pool:latest
+```
+
+### 4. 访问服务
 
 - **管理后台**: http://localhost:6777/admin
 - **健康检查**: http://localhost:6777/health
