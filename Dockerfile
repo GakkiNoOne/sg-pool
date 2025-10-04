@@ -47,7 +47,6 @@ RUN pip install uv && \
 
 # 复制后端项目文件
 COPY src/ ./src/
-COPY run.py ./
 
 # 复制前端构建产物
 COPY --from=frontend-builder /frontend/dist ./frontend/dist
@@ -62,6 +61,6 @@ EXPOSE 6777
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:6777/health || exit 1
 
-# 启动命令
-CMD ["python", "run.py"]
+# 启动命令 - 使用 uvicorn 直接启动 FastAPI 应用
+CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "6777"]
 
