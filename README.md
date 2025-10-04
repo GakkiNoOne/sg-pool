@@ -84,11 +84,6 @@ networks:
     driver: bridge
 ```
 
-**配置说明：**
-- 镜像源：`ghcr.io/gakkinoone/sg-pool:latest`（GitHub Actions 自动构建）
-- 支持平台：`linux/amd64`、`linux/arm64`
-- 服务会自动从 `.env` 文件读取配置
-
 ### 4. 启动服务
 
 ```bash

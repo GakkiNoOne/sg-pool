@@ -55,13 +55,17 @@ COPY --from=frontend-builder /frontend/dist ./frontend/dist
 # 创建必要的目录
 RUN mkdir -p data logs
 
+# 设置默认的 HOST 和 PORT
+ENV HOST=0.0.0.0 \
+    PORT=6777
+
 # 暴露端口
 EXPOSE 6777
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:6777/health || exit 1
+    CMD curl -f http://localhost:${PORT}/health || exit 1
 
-# 启动命令 - 使用 uvicorn 直接启动 FastAPI 应用
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "6777"]
+# 启动命令 - 使用 uvicorn 直接启动 FastAPI 应用，支持环境变量配置
+CMD uvicorn app:app --host ${HOST} --port ${PORT}
 
