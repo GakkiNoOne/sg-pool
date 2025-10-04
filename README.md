@@ -116,6 +116,9 @@ curl http://localhost:6777/{your_api_prefix}/v1/models \
 
 #### OpenAI 格式 - Chat Completions
 
+**支持所有模型**（OpenAI 和 Anthropic 模型均可使用，Anthropic 模型的响应会自动转换为 OpenAI 格式）
+
+示例 1：使用 OpenAI 模型
 ```bash
 curl -X POST http://localhost:6777/{your_api_prefix}/v1/chat/completions \
   -H "Content-Type: application/json" \
@@ -128,7 +131,22 @@ curl -X POST http://localhost:6777/{your_api_prefix}/v1/chat/completions \
   }'
 ```
 
+示例 2：使用 Anthropic 模型（返回 OpenAI 格式）
+```bash
+curl -X POST http://localhost:6777/{your_api_prefix}/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_SECRET" \
+  -d '{
+    "model": "claude-3-5-sonnet-20241022",
+    "messages": [
+      {"role": "user", "content": "Hello!"}
+    ]
+  }'
+```
+
 #### Anthropic 原生格式 - Messages API
+
+**仅支持 Anthropic 模型**（使用 Anthropic 原生请求和响应格式）
 
 ```bash
 curl -X POST http://localhost:6777/{your_api_prefix}/v1/messages \
