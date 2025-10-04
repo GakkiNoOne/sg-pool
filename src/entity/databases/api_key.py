@@ -14,7 +14,7 @@ class APIKey(Base, TimestampMixin):
     name = Column(String(100), nullable=False, comment='密钥名称/别名')
     api_key = Column(String(256), nullable=False, comment='API密钥（建议加密存储）')
     ua = Column(String(256), nullable=False, comment='绑定的固定UA')
-    proxy = Column(String(256), nullable=False, comment='绑定的代理')
+    proxy = Column(String(256), nullable=True, comment='绑定的代理（可选）')
     enabled = Column(Boolean, default=True, nullable=False, comment='是否启用')
     balance = Column(DECIMAL(10, 2), comment='当前余额')
     total_balance = Column(DECIMAL(10, 2), comment='总授权额度')
