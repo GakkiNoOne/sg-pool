@@ -92,15 +92,14 @@ docker-compose up -d
 
 ### 5. 访问服务
 
-- **管理后台**: http://localhost:6777/admin
-- **健康检查**: http://localhost:6777/health
-- **API 文档**: http://localhost:6777/docs
+- **管理后台**: `http://localhost:6777/{ADMIN_PREFIX}`（根据 `.env` 中配置的 `ADMIN_PREFIX` 访问）
+- **健康检查**: `http://localhost:6777/health`
 
 ## 📖 使用
 
 ### 1. 登录管理后台
 
-访问 http://localhost:6777/admin，使用 `.env` 中配置的账号登录。
+访问管理后台（地址为 `http://localhost:6777` + 你配置的 `ADMIN_PREFIX`），使用 `.env` 中配置的账号登录。
 
 ### 2. 导入 API Keys
 
