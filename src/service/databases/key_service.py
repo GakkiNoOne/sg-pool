@@ -38,16 +38,20 @@ def get_random_key_from_cache() -> Optional[APIKey]:
 
 def create_api_key(db: Session, request: APIKeyCreateRequest) -> APIKey:
     """创建 API Key"""
+    # 设置默认余额为 10.0
+    balance = request.balance if request.balance is not None else 10.0
+    total_balance = request.total_balance if request.total_balance is not None else 10.0
+    
     api_key = APIKey(
         name=request.name,
         api_key=request.api_key,
         ua=request.ua,
         proxy=request.proxy,
         enabled=request.enabled,
-        balance=request.balance,
-        total_balance=request.total_balance,
+        balance=balance,
+        total_balance=total_balance,
         memo=request.memo,
-        balance_last_update=datetime.now() if request.balance is not None else None
+        balance_last_update=datetime.now()
     )
     
     db.add(api_key)
