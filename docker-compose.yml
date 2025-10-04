@@ -1,12 +1,11 @@
 version: '3.8'
 
 services:
-  # 后端服务
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: coco-backend
+  # SG-Pool 后端服务
+  sg-pool:
+    # 使用 GitHub Container Registry 构建的镜像
+    image: ghcr.io/gakkinoone/sg-pool:latest
+    container_name: sg-pool
     ports:
       - "6777:6777"
     volumes:
@@ -26,7 +25,7 @@ services:
       - .env
     restart: unless-stopped
     networks:
-      - coco-network
+      - sg-pool-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:6777/health"]
       interval: 30s
@@ -35,6 +34,6 @@ services:
       start_period: 10s
 
 networks:
-  coco-network:
+  sg-pool-network:
     driver: bridge
 
